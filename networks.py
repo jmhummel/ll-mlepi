@@ -101,7 +101,6 @@ def stack1(x, filters, blocks, stride1=2, name=None):
 # ResNet network
 
 def ResNet(
-        images_in,                          # Input images [batch, channel, height, width].
         num_channels        = 3,            # Number of input color channels in images.
         resolution          = 32,           # Resolution (h, w) of input images.
         label_size          = 10,           # Number of labels.
@@ -109,7 +108,7 @@ def ResNet(
         **kwargs):                          # Unused keyword args.
 
     img_inputs = keras.Input(shape=(resolution, resolution, num_channels))
-    x = layers.Conv2D(64, 7, strides=2, padding='SAME')(images_in)
+    x = layers.Conv2D(64, 7, strides=2, padding='SAME')(img_inputs)
     x = layers.BatchNormalization(axis=1)(x)
     x = layers.Activation('relu')(x)
     x = layers.MaxPooling2D(3, strides=2, padding='SAME')(x)

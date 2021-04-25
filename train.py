@@ -3,12 +3,12 @@ from networks import ResNet
 
 
 def train():
-    model = ResNet()
-    print(model.summary())
-
     (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
     x_train = x_train.astype("float32") / 255
     x_test = x_test.astype("float32") / 255
+
+    model = ResNet(num_channels=3, resolution=32, label_size=10, layer_depth=50)
+    print(model.summary())
 
     model.compile(
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),

@@ -125,17 +125,17 @@ def get_stacks(layer_depth=50):
 
     if layer_depth == 18:
         def stack_fn(x):
-            x = stack0(x, 64, 3, stride1=1, name='conv2')
-            x = stack1(x, 64, 3, name='conv3')
-            x = stack1(x, 256, 6, name='conv4')
-            return stack1(x, 512, 3, name='conv5')
+            x = stack0(x, 64, 2, stride1=1, name='conv2')
+            x = stack0(x, 128, 2, name='conv3')
+            x = stack0(x, 256, 2, name='conv4')
+            return stack0(x, 512, 2, name='conv5')
 
     if layer_depth == 34:
         def stack_fn(x):
-            x = stack1(x, 64, 3, stride1=1, name='conv2')
-            x = stack1(x, 128, 4, name='conv3')
-            x = stack1(x, 256, 6, name='conv4')
-            return stack1(x, 512, 3, name='conv5')
+            x = stack0(x, 64, 3, stride1=1, name='conv2')
+            x = stack0(x, 128, 4, name='conv3')
+            x = stack0(x, 256, 6, name='conv4')
+            return stack0(x, 512, 3, name='conv5')
 
     if layer_depth == 50:
         def stack_fn(x):

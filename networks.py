@@ -92,7 +92,7 @@ def stack0(x, filters, blocks, stride1=2, name=None):
     Returns:
       Output tensor for the stacked blocks.
     """
-    x = block0(x, filters, stride=stride1, conv_shortcut=False, name=name + '_block0')
+    x = block0(x, filters, stride=stride1, name=name + '_block0')
     for i in range(2, blocks + 1):
         x = block0(x, filters, conv_shortcut=False, name=name + '_block' + str(i))
     return x

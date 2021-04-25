@@ -79,7 +79,27 @@ def block1(x, filters, kernel_size=3, stride=1, conv_shortcut=True, name=None):
     return x
 
 #---------------------------------------------------------------------------
-# Stack of residual blocks
+# Stack of residual blocks used in ResNet-18, 34
+
+def stack0(x, filters, blocks, stride1=2, name=None):
+    """A set of stacked residual blocks.
+    Arguments:
+      x: input tensor.
+      filters: integer, filters of the bottleneck layer in a block.
+      blocks: integer, blocks in the stacked blocks.
+      stride1: default 2, stride of the first layer in the first block.
+      name: string, stack label.
+    Returns:
+      Output tensor for the stacked blocks.
+    """
+    x = block0(x, filters, stride=stride1, conv_shortcut=False, name=name + '_block0')
+    for i in range(2, blocks + 1):
+        x = block0(x, filters, conv_shortcut=False, name=name + '_block' + str(i))
+    return x
+
+
+#---------------------------------------------------------------------------
+# Stack of residual blocks used in ResNet-50, 101, 152
 
 def stack1(x, filters, blocks, stride1=2, name=None):
     """A set of stacked residual blocks.
@@ -102,14 +122,44 @@ def stack1(x, filters, blocks, stride1=2, name=None):
 # Gets stacks for specified layer depth
 
 def get_stacks(layer_depth=50):
-    def stack_fn(x):
-        x = stack1(x, 64, 3, stride1=1, name='conv2')
-        x = stack1(x, 128, 4, name='conv3')
-        x = stack1(x, 256, 6, name='conv4')
-        x = stack1(x, 512, 3, name='conv5')
-        return x
+
+    if layer_depth == 18:
+        def stack_fn(x):
+            x = stack0(x, 64, 3, stride1=1, name='conv2')
+            x = stack1(x, 64, 3, name='conv3')
+            x = stack1(x, 256, 6, name='conv4')
+            return stack1(x, 512, 3, name='conv5')
+
+    if layer_depth == 34:
+        def stack_fn(x):
+            x = stack1(x, 64, 3, stride1=1, name='conv2')
+            x = stack1(x, 128, 4, name='conv3')
+            x = stack1(x, 256, 6, name='conv4')
+            return stack1(x, 512, 3, name='conv5')
+
+    if layer_depth == 50:
+        def stack_fn(x):
+            x = stack1(x, 64, 3, stride1=1, name='conv2')
+            x = stack1(x, 128, 4, name='conv3')
+            x = stack1(x, 256, 6, name='conv4')
+            return stack1(x, 512, 3, name='conv5')
+
+    elif layer_depth == 101:
+        def stack_fn(x):
+            x = stack1(x, 64, 3, stride1=1, name='conv2')
+            x = stack1(x, 128, 4, name='conv3')
+            x = stack1(x, 256, 23, name='conv4')
+            return stack1(x, 512, 3, name='conv5')
+
+    elif layer_depth == 152:
+        def stack_fn(x):
+            x = stack1(x, 64, 3, stride1=1, name='conv2')
+            x = stack1(x, 128, 8, name='conv3')
+            x = stack1(x, 256, 36, name='conv4')
+            return stack1(x, 512, 3, name='conv5')
 
     return stack_fn
+
 
 
 #----------------------------------------------------------------------------

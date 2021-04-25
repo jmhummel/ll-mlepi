@@ -22,3 +22,9 @@ def train():
     print("Test loss:", test_scores[0])
     print("Test accuracy:", test_scores[1])
 
+#----------------------------------------------------------------------------
+# Main entry point.
+# Calls the function indicated in config.py.
+
+if __name__ == "__main__":
+    train()

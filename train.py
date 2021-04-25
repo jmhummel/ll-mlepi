@@ -1,5 +1,7 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 from tensorflow import keras
-from networks import ResNet
+from networks import ResNet, get_layer_depth
 import argparse
 
 DATASETS = {
@@ -22,6 +24,8 @@ def train(
 
     model = ResNet(num_channels=num_channels, resolution=resolution, label_size=label_size, layer_depth=layer_depth)
     print(model.summary())
+
+    print(f'Layer depth: {get_layer_depth(model)}')
 
     model.compile(
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),

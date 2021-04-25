@@ -98,6 +98,20 @@ def stack1(x, filters, blocks, stride1=2, name=None):
 
 
 #----------------------------------------------------------------------------
+# Gets stacks for specified layer depth
+
+def get_stacks(layer_depth=50):
+    def stack_fn(x):
+        x = stack1(x, 64, 3, stride1=1, name='conv2')
+        x = stack1(x, 128, 4, name='conv3')
+        x = stack1(x, 256, 6, name='conv4')
+        x = stack1(x, 512, 3, name='conv5')
+        return x
+
+    return stack_fn
+
+
+#----------------------------------------------------------------------------
 # ResNet network
 
 def ResNet(
@@ -107,22 +121,28 @@ def ResNet(
         layer_depth         = 50,           # ResNet layer depth
         **kwargs):                          # Unused keyword args.
 
+    stack_fn = get_stacks(layer_depth)
+
     img_inputs = keras.Input(shape=(resolution, resolution, num_channels))
     x = layers.Conv2D(64, 7, strides=2, padding='SAME')(img_inputs)
     x = layers.BatchNormalization(axis=1)(x)
     x = layers.Activation('relu')(x)
     x = layers.MaxPooling2D(3, strides=2, padding='SAME')(x)
-    x = stack1(x, 64, 3, stride1=1, name='conv2')
-    x = stack1(x, 128, 4, name='conv3')
-    x = stack1(x, 256, 6, name='conv4')
-    x = stack1(x, 512, 3, name='conv5')
+    x = stack_fn(x)
     x = layers.GlobalAveragePooling2D(name='avg_pool')(x)
     x = layers.Dense(label_size, activation='softmax', name='predictions')(x)
     model = keras.Model(inputs=img_inputs, outputs=x, name="resnet_model")
 
     return model
 
+#----------------------------------------------------------------------------
+# Get layer depth for verification
 
+def get_layer_depth(model):
+    layer_names = [l.name for l in model.layers]
+    # Filter names to only conv layers, not including skip layer convolutions
+    conv_layer_names = [l for l in layer_names if '1_conv' in l or '2_conv' in l or '3_conv' in l]
+    return len(conv_layer_names) + 2 # adds top conv layer and max pool
 
 
 

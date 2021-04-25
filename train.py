@@ -1,5 +1,6 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 from tensorflow import keras
 from networks import ResNet, get_layer_depth
 import argparse

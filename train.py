@@ -16,7 +16,7 @@ def train():
         metrics=["accuracy"],
     )
 
-    history = model.fit(x_train, y_train, batch_size=64, epochs=2, validation_split=0.2)
+    history = model.fit(x_train, y_train, batch_size=64, epochs=25, validation_split=0.2)
 
     test_scores = model.evaluate(x_test, y_test, verbose=2)
     print("Test loss:", test_scores[0])

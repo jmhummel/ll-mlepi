@@ -47,4 +47,5 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--layer-depth', type=int, action='store', dest='layer_depth', help='ResNet layer depth')
     args = parser.parse_args()
     print(f'Training: {args}')
-    train(**vars(args))
+    kwargs = {k: v for k, v in vars(args).items() if v is not None}
+    train(**kwargs)

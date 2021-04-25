@@ -15,7 +15,7 @@ def train(
         dataset     = 'mnist',  # Dataset to use
         layer_depth = 50,       # Layer depth of ResNet
 ):
-    data_source, num_channels, resolution, label_size = DATASETS['dataset']
+    data_source, num_channels, resolution, label_size = DATASETS[dataset]
     (x_train, y_train), (x_test, y_test) = data_source.load_data(dataset)
     x_train = x_train.astype("float32") / 255
     x_test = x_test.astype("float32") / 255

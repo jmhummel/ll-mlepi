@@ -20,10 +20,10 @@ def search(dataset='mnist', minimize='accuracy', iterations=10):
 
     # Define the search space
     space = {
-        'batch_size': hp.quniform('batch_size', 1, 256, 64),
-        'epochs': hp.quniform('epochs', 1, 100, 25),
-        'layer_depth': hp.quniform('layer_depth', 16, 256, 50),
-        'filter_depth': hp.quniform('filter_depth', 1, 256, 64),
+        'batch_size': hp.qloguniform('batch_size', 1, 256, 1),
+        'epochs': hp.qloguniform('epochs', 1, 100, 1),
+        'layer_depth': hp.qloguniform('layer_depth', 16, 256, 1),
+        'filter_depth': hp.qloguniform('filter_depth', 1, 256, 1),
     }
 
     # Algorithm

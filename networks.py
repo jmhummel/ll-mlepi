@@ -129,6 +129,7 @@ def get_stacks(layer_depth=50):
     stack_dict = {
         16: ((stack0, 1), (stack0, 2), (stack0, 2), (stack0, 2)),
         17: ((stack1, 1), (stack0, 2), (stack0, 2), (stack0, 2)),
+
         18: ((stack0, 2), (stack0, 2), (stack0, 2), (stack0, 2)),
         19: ((stack1, 1), (stack0, 2), (stack0, 3), (stack0, 2)),
         20: ((stack0, 2), (stack0, 2), (stack0, 3), (stack0, 2)),
@@ -164,9 +165,11 @@ def get_stacks(layer_depth=50):
         49: ((stack0, 4), (stack1, 3), (stack0, 11), (stack0, 4)),
 
         50: ((stack1, 3), (stack1, 4), (stack1, 6), (stack1, 3)),
-        101: ((stack1, 3), (stack1, 4), (stack1, 23), (stack1, 3)),
-        152: ((stack1, 3), (stack1, 8), (stack1, 36), (stack1, 3)),
+        51: ((stack0, 5), (stack1, 4), (stack1, 6), (stack1, 3)),
     }
+    
+    # 101: ((stack1, 3), (stack1, 4), (stack1, 23), (stack1, 3)),
+    # 152: ((stack1, 3), (stack1, 8), (stack1, 36), (stack1, 3)),
 
     ((conv2_fn, conv2_blocks),
      (conv3_fn, conv3_blocks),

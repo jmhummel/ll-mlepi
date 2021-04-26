@@ -125,7 +125,7 @@ def stack1(x, filters, blocks, stride1=2, name=None):
 # ----------------------------------------------------------------------------
 # Gets stacks for specified layer depth
 
-def get_stacks(layer_depth=50):
+def get_stacks(layer_depth=50, filter_depth=64):
     stack_dict = {
         16: ((stack0, 1), (stack0, 2), (stack0, 2), (stack0, 2)),
         17: ((stack1, 1), (stack0, 2), (stack0, 2), (stack0, 2)),
@@ -190,10 +190,10 @@ def get_stacks(layer_depth=50):
      (conv5_fn, conv5_blocks)) = stack_dict[layer_depth]
 
     def stack_fn(x):
-        x = conv2_fn(x, 64, conv2_blocks, stride1=1, name='conv2')
-        x = conv3_fn(x, 128, conv3_blocks, name='conv3')
-        x = conv4_fn(x, 256, conv4_blocks, name='conv4')
-        return conv5_fn(x, 512, conv5_blocks, name='conv5')
+        x = conv2_fn(x, filter_depth, conv2_blocks, stride1=1, name='conv2')
+        x = conv3_fn(x, filter_depth*2, conv3_blocks, name='conv3')
+        x = conv4_fn(x, filter_depth*4, conv4_blocks, name='conv4')
+        return conv5_fn(x, filter_depth*8, conv5_blocks, name='conv5')
 
     return stack_fn
 
@@ -239,16 +239,17 @@ def get_stacks(layer_depth=50):
 # ResNet network
 
 def ResNet(
-        num_channels=3,  # Number of input color channels in images.
-        resolution=32,  # Resolution (h, w) of input images.
-        label_size=10,  # Number of labels.
-        layer_depth=50,  # ResNet layer depth
+        num_channels=3,     # Number of input color channels in images.
+        resolution=32,      # Resolution (h, w) of input images.
+        label_size=10,      # Number of labels.
+        layer_depth=50,     # ResNet layer depth
+        filter_depth=64,    # ResNet filter depth
         **kwargs):  # Unused keyword args.
 
-    stack_fn = get_stacks(layer_depth)
+    stack_fn = get_stacks(layer_depth, filter_depth)
 
     img_inputs = keras.Input(shape=(resolution, resolution, num_channels))
-    x = layers.Conv2D(64, 7, strides=2, padding='SAME')(img_inputs)
+    x = layers.Conv2D(filter_depth, 7, strides=2, padding='SAME')(img_inputs)
     x = layers.BatchNormalization(axis=1)(x)
     x = layers.Activation('relu')(x)
     x = layers.MaxPooling2D(3, strides=2, padding='SAME')(x)

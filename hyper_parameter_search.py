@@ -7,7 +7,7 @@ from train import DATASETS, train
 def search(dataset='mnist', minimize='accuracy', iterations=10):
     def objective(params):
         """Returns validation score from hyperparameters"""
-        test_scores = train(params.get('batch_size'),
+        test_scores = train(int(params.get('batch_size')),
                             int(params.get('epochs')),
                             dataset,
                             int(params.get('layer_depth')),

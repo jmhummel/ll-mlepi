@@ -145,8 +145,10 @@ def get_stacks(layer_depth=50):
         31: ((stack1, 1), (stack0, 4), (stack0, 6), (stack0, 3)),
         32: ((stack0, 2), (stack0, 4), (stack0, 6), (stack0, 3)),
         33: ((stack1, 1), (stack0, 5), (stack0, 6), (stack0, 3)),
-
         34: ((stack0, 3), (stack0, 4), (stack0, 6), (stack0, 3)),
+
+        35: ((stack0, 3), (stack1, 3), (stack0, 6), (stack0, 3)),
+
         50: ((stack1, 3), (stack1, 4), (stack1, 6), (stack1, 3)),
         101: ((stack1, 3), (stack1, 4), (stack1, 23), (stack1, 3)),
         152: ((stack1, 3), (stack1, 8), (stack1, 36), (stack1, 3)),

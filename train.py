@@ -20,6 +20,8 @@ def train(
         filter_depth    = 64,       # Filter depth of ResNet
         verbose         = True,
 ):
+    print(f'Params: {(batch_size, epochs, dataset, layer_depth, filter_depth)}')
+
     data_source, num_channels, resolution, label_size = DATASETS[dataset]
     (x_train, y_train), (x_test, y_test) = data_source.load_data()
     x_train = x_train.astype("float32") / 255

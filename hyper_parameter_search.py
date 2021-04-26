@@ -6,10 +6,10 @@ from train import DATASETS, train
 
 def search(dataset='mnist', minimize='accuracy', iterations=10):
     def objective(
-            batch_size=64,  # Batch size
-            epochs=25,  # Number of epochs
-            layer_depth=50,  # Layer depth of ResNet
-            filter_depth=64,  # Filter depth of ResNet
+            batch_size=64,      # Batch size
+            epochs=25,          # Number of epochs
+            layer_depth=50,     # Layer depth of ResNet
+            filter_depth=64,    # Filter depth of ResNet
     ):
         """Returns validation score from hyperparameters"""
         test_scores = train(batch_size, epochs, dataset, layer_depth, filter_depth)
@@ -32,7 +32,7 @@ def search(dataset='mnist', minimize='accuracy', iterations=10):
     bayes_trials = Trials()
 
     # Optimize
-    best = fmin(fn=objective, space=space, algo=tpe.suggest,
+    best = fmin(fn=objective, space=space, algo=tpe_algorithm,
                 max_evals=iterations, trials=bayes_trials)
 
     print(best)

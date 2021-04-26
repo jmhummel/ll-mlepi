@@ -18,6 +18,7 @@ def train(
         dataset         = 'mnist',  # Dataset to use
         layer_depth     = 50,       # Layer depth of ResNet
         filter_depth    = 64,       # Filter depth of ResNet
+        verbose         = True,
 ):
     data_source, num_channels, resolution, label_size = DATASETS[dataset]
     (x_train, y_train), (x_test, y_test) = data_source.load_data()
@@ -25,9 +26,11 @@ def train(
     x_test = x_test.astype("float32") / 255
 
     model = ResNet(num_channels=num_channels, resolution=resolution, label_size=label_size, layer_depth=layer_depth, filter_depth=filter_depth)
-    print(model.summary())
+    if verbose:
+        print(model.summary())
 
-    print(f'Layer depth: {get_layer_depth(model)}')
+    if verbose:
+        print(f'Layer depth: {get_layer_depth(model)}')
 
     model.compile(
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -38,10 +41,10 @@ def train(
     history = model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=0.2)
 
     test_scores = model.evaluate(x_test, y_test, verbose=2)
-    print("Test loss:", test_scores[0])
-    print("Test accuracy:", test_scores[1])
+    if verbose:
+        print("Test loss:", test_scores[0])
+        print("Test accuracy:", test_scores[1])
 
-    print(type(test_scores[1]))
     return test_scores
 
 #----------------------------------------------------------------------------

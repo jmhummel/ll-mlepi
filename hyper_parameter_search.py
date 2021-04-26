@@ -8,10 +8,11 @@ def search(dataset='mnist', minimize='accuracy', iterations=10):
     def objective(params):
         """Returns validation score from hyperparameters"""
         test_scores = train(params.get('batch_size'),
-                            params.get('epochs'),
+                            int(params.get('epochs')),
                             dataset,
-                            params.get('layer_depth'),
-                            params.get('filter_depth'))
+                            int(params.get('layer_depth')),
+                            int(params.get('filter_depth')),
+                            verbose=False)
         loss = test_scores[0]
         if minimize == 'accuracy':
             loss = 1 - test_scores[1]

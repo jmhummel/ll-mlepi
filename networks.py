@@ -169,6 +169,18 @@ def get_stacks(layer_depth=50):
         52: ((stack0, 5), (stack1, 4), (stack1, 6), (stack0, 5)),
     }
 
+    for i in range(53, 152, 3):
+        conv3_blocks = (i-50)//3 + 6
+        stack_dict[i] = ((stack1, 3), (stack1, 4), (stack1, conv3_blocks), (stack1, 3)),
+        stack_dict[i+1] = ((stack0, 5), (stack1, 4), (stack1, conv3_blocks), (stack1, 3)),
+        stack_dict[i+2] = ((stack0, 5), (stack1, 4), (stack1, conv3_blocks), (stack0, 5)),
+
+    for i in range(152, 257, 3):
+        conv3_blocks = (i-152)//3 + 36
+        stack_dict[i] = ((stack1, 3), (stack1, 8), (stack1, conv3_blocks), (stack1, 3)),
+        stack_dict[i+1] = ((stack0, 5), (stack1, 8), (stack1, conv3_blocks), (stack1, 3)),
+        stack_dict[i+2] = ((stack0, 5), (stack1, 8), (stack1, conv3_blocks), (stack0, 5)),
+
     # 101: ((stack1, 3), (stack1, 4), (stack1, 23), (stack1, 3)),
     # 152: ((stack1, 3), (stack1, 8), (stack1, 36), (stack1, 3)),
 

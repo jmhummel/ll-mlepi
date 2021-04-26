@@ -24,7 +24,7 @@ def train(
     x_train = x_train.astype("float32") / 255
     x_test = x_test.astype("float32") / 255
 
-    model = ResNet(num_channels=num_channels, resolution=resolution, label_size=label_size, layer_depth=layer_depth)
+    model = ResNet(num_channels=num_channels, resolution=resolution, label_size=label_size, layer_depth=layer_depth, filter_depth=filter_depth)
     print(model.summary())
 
     print(f'Layer depth: {get_layer_depth(model)}')

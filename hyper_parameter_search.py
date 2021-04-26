@@ -7,11 +7,11 @@ from train import DATASETS, train
 def search(dataset='mnist', minimize='accuracy', max_epochs=100, iterations=10):
     def objective(params):
         """Returns validation score from hyperparameters"""
-        test_scores = train(int(params.get('batch_size')),
+        test_scores = train(2**int(params.get('log2_batch_size')),
                             int(params.get('epochs')),
                             dataset,
                             int(params.get('layer_depth')),
-                            int(params.get('filter_depth')),
+                            2**int(params.get('log2_filter_depth')),
                             verbose=False)
         loss = test_scores[0]
         if minimize == 'accuracy':
@@ -20,10 +20,10 @@ def search(dataset='mnist', minimize='accuracy', max_epochs=100, iterations=10):
 
     # Define the search space
     space = {
-        'batch_size': hp.quniform('batch_size', 1, 256, 1),
+        'log2_batch_size': hp.quniform('batch_size', 1, 8, 1),
         'epochs': hp.quniform('epochs', 1, max_epochs, 1),
         'layer_depth': hp.quniform('layer_depth', 16, 256, 1),
-        'filter_depth': hp.quniform('filter_depth', 1, 256, 1),
+        'log2_filter_depth': hp.quniform('filter_depth', 1, 8, 1),
     }
 
     # Algorithm

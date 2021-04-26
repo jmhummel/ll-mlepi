@@ -40,6 +40,12 @@ def train(
     print("Test loss:", test_scores[0])
     print("Test accuracy:", test_scores[1])
 
+
+def test_layer_depth():
+    for i in range(16, 257):
+        model = ResNet(num_channels=1, resolution=28, label_size=10, layer_depth=i)
+        print(f'i: {i}, Layer depth: {get_layer_depth(model)}')
+
 #----------------------------------------------------------------------------
 # Main entry point.
 # Calls the function indicated in config.py.
@@ -53,4 +59,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print(f'Training: {args}')
     kwargs = {k: v for k, v in vars(args).items() if v is not None}
-    train(**kwargs)
+    # train(**kwargs)
+    test_layer_depth()

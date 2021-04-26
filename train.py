@@ -41,6 +41,7 @@ def train(
     print("Test loss:", test_scores[0])
     print("Test accuracy:", test_scores[1])
 
+    print(type(test_scores[1]))
     return test_scores
 
 #----------------------------------------------------------------------------

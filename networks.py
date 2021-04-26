@@ -1,10 +1,12 @@
 import os
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 from tensorflow import keras
 from tensorflow.keras import layers
 
-#---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 # Residual block used in ResNet-18, ResNet-34
 
 def block0(x, filters, kernel_size=3, stride=1, conv_shortcut=True, name=None):
@@ -39,7 +41,8 @@ def block0(x, filters, kernel_size=3, stride=1, conv_shortcut=True, name=None):
     x = layers.Activation('relu', name=name + '_out')(x)
     return x
 
-#---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 # Residual block used in ResNet-50, 101, 152
 
 def block1(x, filters, kernel_size=3, stride=1, conv_shortcut=True, name=None):
@@ -78,7 +81,8 @@ def block1(x, filters, kernel_size=3, stride=1, conv_shortcut=True, name=None):
     x = layers.Activation('relu', name=name + '_out')(x)
     return x
 
-#---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 # Stack of residual blocks used in ResNet-18, 34
 
 def stack0(x, filters, blocks, stride1=2, name=None):
@@ -98,7 +102,7 @@ def stack0(x, filters, blocks, stride1=2, name=None):
     return x
 
 
-#---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 # Stack of residual blocks used in ResNet-50, 101, 152
 
 def stack1(x, filters, blocks, stride1=2, name=None):
@@ -118,59 +122,78 @@ def stack1(x, filters, blocks, stride1=2, name=None):
     return x
 
 
-#----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 # Gets stacks for specified layer depth
 
 def get_stacks(layer_depth=50):
+    stack_dict = {
+        18: ((stack0, 2), (stack0, 2), (stack0, 2), (stack0, 2)),
+        34: ((stack0, 3), (stack0, 4), (stack0, 6), (stack0, 3)),
+        50: ((stack1, 3), (stack1, 4), (stack1, 6), (stack1, 3)),
+        101: ((stack1, 3), (stack1, 4), (stack1, 23), (stack1, 3)),
+        152: ((stack1, 3), (stack1, 8), (stack1, 36), (stack1, 3)),
+    }
 
-    if layer_depth == 18:
-        def stack_fn(x):
-            x = stack0(x, 64, 2, stride1=1, name='conv2')
-            x = stack0(x, 128, 2, name='conv3')
-            x = stack0(x, 256, 2, name='conv4')
-            return stack0(x, 512, 2, name='conv5')
+    ((conv2_fn, conv2_blocks),
+     (conv3_fn, conv3_blocks),
+     (conv4_fn, conv4_blocks),
+     (conv5_fn, conv5_blocks)) = stack_dict[layer_depth]
 
-    if layer_depth == 34:
-        def stack_fn(x):
-            x = stack0(x, 64, 3, stride1=1, name='conv2')
-            x = stack0(x, 128, 4, name='conv3')
-            x = stack0(x, 256, 6, name='conv4')
-            return stack0(x, 512, 3, name='conv5')
-
-    if layer_depth == 50:
-        def stack_fn(x):
-            x = stack1(x, 64, 3, stride1=1, name='conv2')
-            x = stack1(x, 128, 4, name='conv3')
-            x = stack1(x, 256, 6, name='conv4')
-            return stack1(x, 512, 3, name='conv5')
-
-    elif layer_depth == 101:
-        def stack_fn(x):
-            x = stack1(x, 64, 3, stride1=1, name='conv2')
-            x = stack1(x, 128, 4, name='conv3')
-            x = stack1(x, 256, 23, name='conv4')
-            return stack1(x, 512, 3, name='conv5')
-
-    elif layer_depth == 152:
-        def stack_fn(x):
-            x = stack1(x, 64, 3, stride1=1, name='conv2')
-            x = stack1(x, 128, 8, name='conv3')
-            x = stack1(x, 256, 36, name='conv4')
-            return stack1(x, 512, 3, name='conv5')
+    def stack_fn(x):
+        x = conv2_fn(x, 64, conv2_blocks, stride1=1, name='conv2')
+        x = conv3_fn(x, 128, conv3_blocks, name='conv3')
+        x = conv4_fn(x, 256, conv4_blocks, name='conv4')
+        return conv5_fn(x, 512, conv5_blocks, name='conv5')
 
     return stack_fn
 
+    # if layer_depth == 18:
+    #     def stack_fn(x):
+    #         x = stack0(x, 64, 2, stride1=1, name='conv2')
+    #         x = stack0(x, 128, 2, name='conv3')
+    #         x = stack0(x, 256, 2, name='conv4')
+    #         return stack0(x, 512, 2, name='conv5')
+    #
+    # if layer_depth == 34:
+    #     def stack_fn(x):
+    #         x = stack0(x, 64, 3, stride1=1, name='conv2')
+    #         x = stack0(x, 128, 4, name='conv3')
+    #         x = stack0(x, 256, 6, name='conv4')
+    #         return stack0(x, 512, 3, name='conv5')
+    #
+    # if layer_depth == 50:
+    #     def stack_fn(x):
+    #         x = stack1(x, 64, 3, stride1=1, name='conv2')
+    #         x = stack1(x, 128, 4, name='conv3')
+    #         x = stack1(x, 256, 6, name='conv4')
+    #         return stack1(x, 512, 3, name='conv5')
+    #
+    # elif layer_depth == 101:
+    #     def stack_fn(x):
+    #         x = stack1(x, 64, 3, stride1=1, name='conv2')
+    #         x = stack1(x, 128, 4, name='conv3')
+    #         x = stack1(x, 256, 23, name='conv4')
+    #         return stack1(x, 512, 3, name='conv5')
+    #
+    # elif layer_depth == 152:
+    #     def stack_fn(x):
+    #         x = stack1(x, 64, 3, stride1=1, name='conv2')
+    #         x = stack1(x, 128, 8, name='conv3')
+    #         x = stack1(x, 256, 36, name='conv4')
+    #         return stack1(x, 512, 3, name='conv5')
+    #
+    # return stack_fn
 
 
-#----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 # ResNet network
 
 def ResNet(
-        num_channels        = 3,            # Number of input color channels in images.
-        resolution          = 32,           # Resolution (h, w) of input images.
-        label_size          = 10,           # Number of labels.
-        layer_depth         = 50,           # ResNet layer depth
-        **kwargs):                          # Unused keyword args.
+        num_channels=3,  # Number of input color channels in images.
+        resolution=32,  # Resolution (h, w) of input images.
+        label_size=10,  # Number of labels.
+        layer_depth=50,  # ResNet layer depth
+        **kwargs):  # Unused keyword args.
 
     stack_fn = get_stacks(layer_depth)
 
@@ -186,14 +209,12 @@ def ResNet(
 
     return model
 
-#----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
 # Get layer depth for verification
 
 def get_layer_depth(model):
     layer_names = [l.name for l in model.layers]
     # Filter names to only conv layers, not including skip layer convolutions
     conv_layer_names = [l for l in layer_names if '1_conv' in l or '2_conv' in l or '3_conv' in l]
-    return len(conv_layer_names) + 2 # adds top conv layer and max pool
-
-
-
+    return len(conv_layer_names) + 2  # adds top conv layer and max pool

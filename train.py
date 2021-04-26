@@ -41,6 +41,8 @@ def train(
     print("Test loss:", test_scores[0])
     print("Test accuracy:", test_scores[1])
 
+    return test_scores
+
 #----------------------------------------------------------------------------
 # Helper function for validating layer depth is correct for 16-256
 

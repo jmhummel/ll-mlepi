@@ -13,10 +13,11 @@ DATASETS = {
 }
 
 def train(
-        batch_size  = 64,       # Batch size
-        epochs      = 25,       # Number of epochs
-        dataset     = 'mnist',  # Dataset to use
-        layer_depth = 50,       # Layer depth of ResNet
+        batch_size      = 64,       # Batch size
+        epochs          = 25,       # Number of epochs
+        dataset         = 'mnist',  # Dataset to use
+        layer_depth     = 50,       # Layer depth of ResNet
+        filter_depth    = 64,       # Filter depth of ResNet
 ):
     data_source, num_channels, resolution, label_size = DATASETS[dataset]
     (x_train, y_train), (x_test, y_test) = data_source.load_data()
@@ -60,6 +61,7 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--epochs', type=int, action='store', help='Number of epochs to train over')
     parser.add_argument('-d', '--dataset', choices=DATASETS.keys(), help='Dataset to use')
     parser.add_argument('-l', '--layer-depth', type=int, action='store', dest='layer_depth', help='ResNet layer depth')
+    parser.add_argument('-f', '--filter-depth', type=int, action='store', dest='filter_depth', help='ResNet filter depth')
     args = parser.parse_args()
     print(f'Training: {args}')
     kwargs = {k: v for k, v in vars(args).items() if v is not None}

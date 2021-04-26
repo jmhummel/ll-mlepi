@@ -127,7 +127,12 @@ def stack1(x, filters, blocks, stride1=2, name=None):
 
 def get_stacks(layer_depth=50):
     stack_dict = {
+        16: ((stack0, 1), (stack0, 2), (stack0, 2), (stack0, 2)),
+        17: ((stack1, 1), (stack0, 2), (stack0, 2), (stack0, 2)),
         18: ((stack0, 2), (stack0, 2), (stack0, 2), (stack0, 2)),
+        19: ((stack1, 1), (stack0, 2), (stack0, 3), (stack0, 2)),
+        20: ((stack0, 2), (stack0, 2), (stack0, 3), (stack0, 2)),
+
         34: ((stack0, 3), (stack0, 4), (stack0, 6), (stack0, 3)),
         50: ((stack1, 3), (stack1, 4), (stack1, 6), (stack1, 3)),
         101: ((stack1, 3), (stack1, 4), (stack1, 23), (stack1, 3)),
